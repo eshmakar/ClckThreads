@@ -1,4 +1,8 @@
 package com.test;
+//WJvsL
+//0-0 1-1 2-2 3-3 4-4 5-5 6-6 7-7 8-8 9-9 A-10
+//B-11 C-12 D-13 E-14 F-15 G-16 H-17 I-18 J-19 K-20 L-21 M-22 N-23 O-24 P-25 Q-26 R-27 S-28 T-29 U-30 V-31 W-32 X-33 Y-34 Z-35
+//a-36 b-37 c-38 d-39 e-40 f-41 g-42 h-43 i-44 j-45 k-46 l-47 m-48 n-49 o-50 p-51 q-52 r-53 s-54 t-55 u-56 v-57 w-58 x-59 y-60 z-61
 
 import java.io.*;
 import java.net.URL;
@@ -9,39 +13,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ClckThreads {
-    private static volatile int one;//изменения одного потока будут видны всем остальным
-    private static volatile int two;
-    private static volatile int three;
-    private static volatile int four;
-    private static volatile int five;
     private static volatile int GlobalCount;
     private static volatile int count;
-    private static volatile String url;
     private static LocalDateTime l = LocalDateTime.now();
+    private static final char[]  symbols = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 
-    public static void clckCod() throws IOException {//весь код работает в отдельном методе
+    public static void clckCod1() throws IOException {//весь код работает в отдельном методе
         String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
         BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
-
         long start = 0;
 
-
-//WJvsL
-//0-0 1-1 2-2 3-3 4-4 5-5 6-6 7-7 8-8 9-9 A-10
-//B-11 C-12 D-13 E-14 F-15 G-16 H-17 I-18 J-19 K-20 L-21 M-22 N-23 O-24 P-25 Q-26 R-27 S-28 T-29 U-30 V-31 W-32 X-33 Y-34 Z-35
-//a-36 b-37 c-38 d-39 e-40 f-41 g-42 h-43 i-44 j-45 k-46 l-47 m-48 n-49 o-50 p-51 q-52 r-53 s-54 t-55 u-56 v-57 w-58 x-59 y-60 z-61
-
-
-        char[] symbols = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
-        System.out.println("Работу начал...");
-        for (one = 32; one < 62; one++) {//W
-            for (two = 23; two < 62; two++) {//M
-                for (three = 2; three < 62; three++) {//j
-                    for (four = 2; four < 62; four++) {
-                        for (five = 2; five < 62; five++) {
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 0; five < 62; five += 20) {
 
                             GlobalCount++;
-                            url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
 
                             InputStream response;
                             byte[] delimetr;
@@ -52,7 +41,7 @@ public class ClckThreads {
                                 con.setReadTimeout(5000);
                                 response = con.getInputStream();//открывается поток данных из url
 
-                                delimetr = response.readNBytes(15_000);//читаем первые 15 000 байтов
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
                                 response.close();
 
                                 String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
@@ -83,6 +72,628 @@ public class ClckThreads {
                                         f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
                                     }
                                     f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod2() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 1; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod3() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 2; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod4() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 3; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod5() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 4; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod6() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 5; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod7() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 6; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod8() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 7; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod9() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 8; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public static void clckCod10() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 9; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
                                     start = System.currentTimeMillis();
                                     System.gc();
                                 }
@@ -98,132 +709,696 @@ public class ClckThreads {
         }
     }
 
-    public static void main(String[] args) {
-        int kolvoPotokov = 100;//самое интересное, здесь по умолчанию стоит 100 потоков!
-        ExecutorService service = Executors.newFixedThreadPool(kolvoPotokov);//с помощью ExecutorService создаем 100 потоков
-        for (int j = 0; j < kolvoPotokov; j++) {//запускаем все 100 потоков на работу!!! Процессор грузится на компе почти на полную!
-            service.submit(new Thread(() -> {//чтобы не создавать 100 статичных классов, через лямбда выражении создаем анонимный класс и указываем какой код надо исполнять
-                try {
-                    clckCod();
-                } catch (IOException e) {
+    public static void clckCod11() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 10; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
                 }
-            }));
+            }
         }
+    }
+    public static void clckCod12() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
 
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 11; five < 62; five += 20) {
 
-//        service.submit(new Potok1());
-//        service.submit(new Potok2());
-//        service.submit(new Potok3());
-//        service.submit(new Potok4());
-//        service.submit(new Potok5());
-//        service.submit(new Potok6());
-//        service.submit(new Potok7());
-//        service.submit(new Potok8());
-//        service.submit(new Potok9());
-//        service.submit(new Potok10());
-        service.shutdown();//объязательно остановливаем программу после завершения всех работ
-    }
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
 
-/*    static class Potok10 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok9 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod13() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 12; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok8 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod14() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 13; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok7 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod15() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 14; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok6 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod16() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 15; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok5 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod17() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 16; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok4 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod18() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 17; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok3 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod19() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 18; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok2 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void clckCod20() throws IOException {//весь код работает в отдельном методе
+        String date = l.getYear() + "-" + l.getMonthValue() + "-" + l.getDayOfMonth();
+        BufferedWriter f = new BufferedWriter(new FileWriter(new File("D:/CLCKS.RU/" + date + ".txt"), true));
+        long start = 0;
+
+        for (int one = 32; one < 62; one++) {//W
+            for (int two = 23; two < 62; two++) {//M
+                for (int three = 2; three < 62; three++) {//j
+                    for (int four = 2; four < 62; four++) {
+                        for (int five = 19; five < 62; five += 20) {
+
+                            GlobalCount++;
+                            String url = String.format("https://clck.ru/%c%c%c%c%c", symbols[one], symbols[two], symbols[three], symbols[four], symbols[five]);
+
+                            InputStream response;
+                            byte[] delimetr;
+
+                            try {
+                                URLConnection con = new URL(url).openConnection();
+                                con.setConnectTimeout(3000);
+                                con.setReadTimeout(5000);
+                                response = con.getInputStream();//открывается поток данных из url
+
+                                delimetr = response.readNBytes(20_000);//читаем первые 15 000 байтов
+                                response.close();
+
+                                String temp = new String(delimetr, StandardCharsets.UTF_8);//считанные байты переобразуется в String с кодировкой utf-8
+                                String titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>")).strip();//выделяется (название страницы) после тега title и до закрывающийся тега title
+
+                                if (titleFromSite.contains("�")) {//если выводятся крякозябры, то меняем кодировку
+                                    temp = new String(delimetr, "windows-1251");
+                                    titleFromSite = temp.substring(temp.indexOf("<title>") + 7, temp.indexOf("</title>"));
+                                }
+
+                                if (skryvat(titleFromSite)) {
+                                    double sec = (double) (System.currentTimeMillis() - start) / 1000;//1 секунда
+                                    double sec2 = (double) (System.currentTimeMillis() - start) % 1000;
+                                    double min = (double) ((System.currentTimeMillis() - start) / 1000) % 60;
+
+                                    String SECUND = "%d. %s - %s (%d) - %.3f сек. %s\n";
+                                    String MINUTE = "%d. %s - %s (%d) - %.0f мин. и %.0f сек. %s\n";
+
+                                    LocalDateTime HoursMinutesSeconds = LocalDateTime.now();
+                                    String date2 = HoursMinutesSeconds.getHour() + ":" + HoursMinutesSeconds.getMinute() + ":" + HoursMinutesSeconds.getSecond();
+
+                                    if (sec < 60) {
+                                        System.out.printf(SECUND, ++count, url, titleFromSite, GlobalCount, sec, date2);
+                                        f.write(String.format(SECUND, count, url, titleFromSite, GlobalCount, sec, date2));
+
+                                    } else {
+                                        System.out.printf(MINUTE, ++count, url, titleFromSite, GlobalCount, min, sec2, date2);
+                                        f.write(String.format(MINUTE, count, url, titleFromSite, GlobalCount, min, sec2, date2));
+                                    }
+                                    f.flush();
+
+                                    start = System.currentTimeMillis();
+                                    System.gc();
+                                }
+                                if (GlobalCount % 100 == 0) {
+                                    System.gc();
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-    static class Potok1 extends Thread {
-        @Override
-        public void run() {
-            try {
-                clckCod();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 
     private static boolean skryvat(String s) {
         return !s.equals("Google Документы ‒ бесплатно создавайте и редактируйте документы в Интернете.") && !s.contains("PDisk")
@@ -250,5 +1425,43 @@ public class ClckThreads {
                 && !s.equals("Google Таблицы ‒ бесплатно создавайте и редактируйте таблицы в Интернете.") && !s.equals("Ru7divany at Taplink")
                 && !s.equals("PravSistem.Club") && !s.equals("Warning! | There might be a problem with the requested link")
                 && !s.contains("Квартиры свободные") && !s.equals("Статус заказа") && !s.equals("Закрытый мужской клуб");
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Работу начал...");
+        int kolvoPotokov = 20;//самое интересное, здесь по умолчанию стоит 20 потоков!
+        ExecutorService service = Executors.newFixedThreadPool(kolvoPotokov);//с помощью ExecutorService создаем 20 потоков
+        /*for (int j = 0; j < kolvoPotokov; j++) {//запускаем все 100 потоков на работу!!! Процессор грузится на компе почти на полную!
+            service.submit(new Thread(() -> {//чтобы не создавать 100 статичных классов, через лямбда выражении создаем анонимный класс и указываем какой код надо исполнять
+                try {
+                    clckCod();
+                } catch (IOException e) {
+                }
+            }));*/
+
+        service.submit(new Thread(() -> { try { clckCod1(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod2(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod3(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod4(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod5(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod6(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod7(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod8(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod9(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod10(); } catch (IOException e) { } }));
+
+        service.submit(new Thread(() -> { try { clckCod11(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod12(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod13(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod14(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod15(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod16(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod17(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod18(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod19(); } catch (IOException e) { } }));
+        service.submit(new Thread(() -> { try { clckCod20(); } catch (IOException e) { } }));
+
+
+        service.shutdown();
     }
 }
